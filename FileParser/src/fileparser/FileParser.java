@@ -23,11 +23,23 @@ public class FileParser {
      * @return Returns the new empty index in the array.
      */
     public static int readFile(String vFileName,  String[] vDataArray, int vDataArrayIndex){
+        String currentLine = "";
+        String[] currentLineData;
+        
         try{
             File file = new File(vFileName);
             Scanner fileReader = new Scanner(file);
             while (fileReader.hasNext()){
-                vDataArray[vDataArrayIndex] = fileReader.nextLine();
+                currentLine = fileReader.nextLine();
+                currentLineData = currentLine.split(",");
+                currentLine = String.format("%-10s %-10s %-7s %-4s %-13s %s",
+                                                currentLineData[0].trim(),
+                                                currentLineData[1].trim(),
+                                                currentLineData[2].trim(),
+                                                currentLineData[3].trim(),
+                                                currentLineData[4].trim(),
+                                                currentLineData[5].trim());
+                vDataArray[vDataArrayIndex] = currentLine;
                 vDataArrayIndex++;
             }
         } catch (FileNotFoundException e){
@@ -45,13 +57,16 @@ public class FileParser {
     public static int validateData(String[] vDataArray, int vDataArrayIndex){
         String[] currentLine;
         String line = "";
+        String currentData = "";
         
         for(int i = 0; i < vDataArrayIndex; i++){
             line = vDataArray[i];
-            currentLine = line.split(",");
+            line = line.replaceAll("\\s+", " ");
+            currentLine = line.split(" ");
             for (String thing: currentLine){
                 thing = thing.trim();
-                System.out.println(thing);
+                currentData = thing.trim();
+                System.out.println(currentData);
             }
             System.out.println("---------------------------------");
         }
@@ -89,8 +104,8 @@ public class FileParser {
         int dataArrayIndex = 0;
        
         dataArrayIndex = readFile(fileName, dataArray, dataArrayIndex);
-        printArray(dataArray, dataArrayIndex);
-        
+        // printArray(dataArray, dataArrayIndex);
+        validateData(dataArray, dataArrayIndex);
         
     }
     
