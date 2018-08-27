@@ -26,6 +26,7 @@ public class FileParser {
         String[] currentLine;
         String line = "";
         
+        int lineCount = 1;
         boolean correct = true;
         String firstName, lastName, age, number, email, sex;
         boolean incorrectFound = false;
@@ -46,7 +47,7 @@ public class FileParser {
 
                 correct = validateName(firstName);
                 if (!correct){
-                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
+                    System.out.print("Entry " + (lineCount) + " is incorrect.");
                     System.out.println(" sIncorrect value " + firstName + " found.");
                     correct = true;
 
@@ -56,7 +57,7 @@ public class FileParser {
 
                 correct = validateName(lastName);
                 if (!correct){
-                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
+                    System.out.print("Entry " + (lineCount) + " is incorrect.");
                     System.out.println(" Incorrect value " + lastName + " found.");
                     correct = true;
                     System.out.println("-------------------------------------------------");
@@ -65,7 +66,7 @@ public class FileParser {
 
                 correct = validateSex(sex);
                 if (!correct){
-                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
+                    System.out.print("Entry " + (lineCount) + " is incorrect.");
                     System.out.println(" Incorrect value " + sex + " found.");
                     correct = true;
                     System.out.println("-------------------------------------------------");
@@ -74,7 +75,7 @@ public class FileParser {
                 
                 correct = validateAge(age);
                 if (!correct){
-                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
+                    System.out.print("Entry " + (lineCount) + " is incorrect.");
                     System.out.println(" Incorrect value " + age + " found.");
                     correct = true;
                     System.out.println("-------------------------------------------------");
@@ -84,13 +85,23 @@ public class FileParser {
                 
                 correct = validateNumber(number);
                  if (!correct){
-                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
-                    System.out.println(" Incorrect value " + age + " found.");
+                    System.out.print("Entry " + (lineCount) + " is incorrect.");
+                    System.out.println(" Incorrect value " + number + " found.");
                     correct = true;
                     System.out.println("-------------------------------------------------");
                     incorrectFound = true;
                 }
                 
+                 correct = validateEmail(email);
+                 if (!correct){
+                    System.out.print("Entry " + (lineCount) + " is incorrect.");
+                    System.out.println(" Incorrect value " + email + " found.");
+                    correct = true;
+                    System.out.println("-------------------------------------------------");
+                    incorrectFound = true;
+                }
+                 
+                lineCount++;
                 if (!incorrectFound){
                     vDataArray[vDataArrayIndex] = line;
                     vDataArrayIndex++;
@@ -187,7 +198,19 @@ public class FileParser {
     }
     
     public static boolean validateEmail(String vEmail){
-        System.out.println("Email Checking Function");
+        char currChar;
+        
+        for (int i = 0; i < vEmail.length(); i++){
+            currChar = vEmail.charAt(i);
+            if (i == 0){
+                if (!Character.isAlphabetic(currChar)){
+                    return false;
+                }
+            } else if (!(Character.isAlphabetic(currChar) || Character.isDigit(currChar) || currChar == '.' || currChar == '@' )){
+                System.out.println("Case 2");
+                return false;
+            }
+        }
         return true;
     }
     
