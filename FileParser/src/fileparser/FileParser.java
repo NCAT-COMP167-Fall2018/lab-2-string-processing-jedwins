@@ -72,6 +72,15 @@ public class FileParser {
                     incorrectFound = true;
                 }
                 
+                correct = validateAge(age);
+                if (!correct){
+                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
+                    System.out.println(" Incorrect value " + age + " found.");
+                    correct = true;
+                    System.out.println("-------------------------------------------------");
+                    incorrectFound = true;
+                }
+                
                 if (!incorrectFound){
                     vDataArray[vDataArrayIndex] = line;
                     vDataArrayIndex++;
@@ -101,12 +110,6 @@ public class FileParser {
       }
     }
     
-    public static void removeValue(String[] vArray, int index){
-        for(int i = index + 1; i < vArray.length; i++){
-            vArray[i - 1] = vArray[i];
-        }
-    }
-    
     public static boolean validateName(String vName){
         boolean correct = false;
         for (int i = 0; i < vName.length(); i++){
@@ -132,6 +135,28 @@ public class FileParser {
         return correct;
     }
     
+    public static boolean validateAge(String vAge){
+        boolean correct = true;
+        char currChar = 0;
+        int age = 0;
+        if (vAge.length() == 0){
+            return false;
+        }
+        for(int i = 0; i < vAge.length(); i++){
+            currChar = vAge.charAt(i);
+            if (!Character.isDigit(currChar)){
+                return false;
+            }
+        }
+        if (correct){
+            age = Integer.parseInt(vAge);
+            if (age < 1 || age > 130){
+                return false;
+            }
+        }
+        return correct;
+    }
+    
     public static boolean validateNumber(String vNumber){
         System.out.println("Name Checking Fucntion");
         return true;
@@ -152,8 +177,6 @@ public class FileParser {
         int dataArrayIndex = 0;
        
         dataArrayIndex = readFile(fileName, dataArray, dataArrayIndex);
-        // printArray(dataArray, dataArrayIndex);
-        // validateData(dataArray, dataArrayIndex);
         printArray(dataArray, dataArrayIndex);
     }
     
