@@ -81,6 +81,16 @@ public class FileParser {
                     incorrectFound = true;
                 }
                 
+                
+                correct = validateNumber(number);
+                 if (!correct){
+                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
+                    System.out.println(" Incorrect value " + age + " found.");
+                    correct = true;
+                    System.out.println("-------------------------------------------------");
+                    incorrectFound = true;
+                }
+                
                 if (!incorrectFound){
                     vDataArray[vDataArrayIndex] = line;
                     vDataArrayIndex++;
@@ -158,8 +168,22 @@ public class FileParser {
     }
     
     public static boolean validateNumber(String vNumber){
-        System.out.println("Name Checking Fucntion");
-        return true;
+        vNumber = vNumber.replace("(", "");
+        vNumber = vNumber.replace(")", "");
+        vNumber = vNumber.replace("-", "");
+        
+        int digits = 0;
+        for (int i = 0; i < vNumber.length(); i++){
+            if (Character.isDigit(vNumber.charAt(i))){
+                digits++;
+            }
+        }
+        
+        if (digits == 10){
+            return true;
+        } else{
+            return false;
+        }
     }
     
     public static boolean validateEmail(String vEmail){
