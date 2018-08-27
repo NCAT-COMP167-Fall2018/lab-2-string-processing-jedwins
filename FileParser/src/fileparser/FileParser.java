@@ -22,26 +22,63 @@ public class FileParser {
      * @param vDataArrayIndex The current empty index in the array.
      * @return Returns the new empty index in the array.
      */
-    public static int readFile(String vFileName,  String[] vDataArray, int vDataArrayIndex){
-        String currentLine = "";
-        String[] currentLineData;
+    public static int readFile(String vFileName,  String[] vDataArray, int vDataArrayIndex){     
+        String[] currentLine;
+        String line = "";
         
+        boolean correct = true;
+        String firstName, lastName, age, number, email, sex;
+        boolean incorrectFound = false;
         try{
             File file = new File(vFileName);
             Scanner fileReader = new Scanner(file);
             while (fileReader.hasNext()){
-                currentLine = fileReader.nextLine();
-                currentLineData = currentLine.split(",");
-                currentLine = String.format("%-10s %-10s %-7s %-4s %-13s %s",
-                                                currentLineData[0].trim(),
-                                                currentLineData[1].trim(),
-                                                currentLineData[2].trim(),
-                                                currentLineData[3].trim(),
-                                                currentLineData[4].trim(),
-                                                currentLineData[5].trim());
-                vDataArray[vDataArrayIndex] = currentLine;
-                vDataArrayIndex++;
+                incorrectFound = false;
+                line = fileReader.nextLine();
+                currentLine = line.split(",");
+                
+                firstName = currentLine[0].trim();
+                lastName = currentLine[1].trim();
+                sex = currentLine[2].trim();
+                age = currentLine[3].trim();
+                number = currentLine[4].trim();
+                email = currentLine[5].trim();      
+
+                correct = validateName(firstName);
+                if (!correct){
+                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
+                    System.out.println(" sIncorrect value " + firstName + " found.");
+                    correct = true;
+
+                    System.out.println("--------------------------------------------------");
+                    incorrectFound = true;
+                }
+
+                correct = validateName(lastName);
+                if (!correct){
+                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
+                    System.out.println(" Incorrect value " + lastName + " found.");
+                    correct = true;
+                    System.out.println("-------------------------------------------------");
+                    incorrectFound = true;
+                }
+
+                correct = validateSex(sex);
+                if (!correct){
+                    System.out.print("Entry " + (vDataArrayIndex + 1) + " is incorrect.");
+                    System.out.println(" Incorrect value " + sex + " found.");
+                    correct = true;
+                    System.out.println("-------------------------------------------------");
+                    incorrectFound = true;
+                }
+                
+                if (!incorrectFound){
+                    vDataArray[vDataArrayIndex] = line;
+                    vDataArrayIndex++;
+                }
             }
+                
+                
         } catch (FileNotFoundException e){
             System.out.println("File Not Found");
         }
@@ -49,39 +86,50 @@ public class FileParser {
     }
     
     public static void printArray(String[] vDataArray, int vDataArrayIndex){
+        String currentLine = "";
+        String[] currentLineData;
       for (int i = 0; i < vDataArrayIndex; i++){
-          System.out.println(vDataArray[i]);
+        currentLineData = vDataArray[i].split(",");
+        currentLine = String.format("%-10s %-10s %-7s %-4s %-16s %s",
+                              currentLineData[0].trim(),
+                              currentLineData[1].trim(),
+                              currentLineData[2].trim(),
+                              currentLineData[3].trim(),
+                              currentLineData[4].trim(),
+                              currentLineData[5].trim());
+          System.out.println(currentLine);
       }
     }
     
-    public static int validateData(String[] vDataArray, int vDataArrayIndex){
-        String[] currentLine;
-        String line = "";
-        String currentData = "";
-        
-        for(int i = 0; i < vDataArrayIndex; i++){
-            line = vDataArray[i];
-            line = line.replaceAll("\\s+", " ");
-            currentLine = line.split(" ");
-            for (String thing: currentLine){
-                thing = thing.trim();
-                currentData = thing.trim();
-                System.out.println(currentData);
-            }
-            System.out.println("---------------------------------");
+    public static void removeValue(String[] vArray, int index){
+        for(int i = index + 1; i < vArray.length; i++){
+            vArray[i - 1] = vArray[i];
         }
-        
-        return vDataArrayIndex;
     }
     
     public static boolean validateName(String vName){
-        System.out.println("Name Checking Fucntion");
-        return true;
+        boolean correct = false;
+        for (int i = 0; i < vName.length(); i++){
+            if (i == 0){
+                if (Character.isLetter(vName.charAt(i))){
+                    correct = true;
+                }
+            } else{
+                if (!Character.isLetter(vName.charAt(i))){
+                    correct = false;
+                }
+            }
+        }
+        return correct;
     }
     
     public static boolean validateSex(String vSex){
-        System.out.println("Sex Checking Fucntion");
-        return true;
+        boolean correct = false;
+        vSex = vSex.toUpperCase();
+        if (vSex.equals("MALE") || vSex.equals("FEMALE")){
+            correct = true;
+        }
+        return correct;
     }
     
     public static boolean validateNumber(String vNumber){
@@ -105,8 +153,8 @@ public class FileParser {
        
         dataArrayIndex = readFile(fileName, dataArray, dataArrayIndex);
         // printArray(dataArray, dataArrayIndex);
-        validateData(dataArray, dataArrayIndex);
-        
+        // validateData(dataArray, dataArrayIndex);
+        printArray(dataArray, dataArrayIndex);
     }
     
 }
