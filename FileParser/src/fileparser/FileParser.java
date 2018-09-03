@@ -16,8 +16,10 @@ import java.util.Scanner;
 public class FileParser {
     
     /**
+     * Reads in data from the file and only stores inputs which 
+     * are correctly formatted.
      * 
-     * @param vFileName The name of the file.
+     * @param vFileName The name of the file with the data.
      * @param vDataArray The array to store the lines from the file.
      * @param vDataArrayIndex The current empty index in the array.
      * @return Returns the new empty index in the array.
@@ -32,6 +34,9 @@ public class FileParser {
         try{
             File file = new File(vFileName);
             Scanner fileReader = new Scanner(file);
+            System.out.println("----------------------------------------------------------------------------");
+            System.out.println("                         Reading in Data from File.");
+            System.out.println("----------------------------------------------------------------------------");
             while (fileReader.hasNext()){
                 errorCount = 0;
                 line = fileReader.nextLine();
@@ -53,10 +58,13 @@ public class FileParser {
                 
                 lineCount++;
                 if (errorCount == 0){
-                    vDataArray[vDataArrayIndex] = line;
+                    vDataArray[vDataArrayIndex] = 
+                        String.format("%-10s %-10s %-7s %-4s %-14s %s", firstName, lastName, sex, age, number, email);
                     vDataArrayIndex++;
                 }
             }
+            System.out.println("                     Finished Reading in Data from File.");
+            System.out.println("----------------------------------------------------------------------------");
                 
                 
         } catch (FileNotFoundException e){
@@ -65,32 +73,48 @@ public class FileParser {
         return vDataArrayIndex;
     }
     
+    /**
+     * Outputs data stored in an array. 
+     * 
+     * @param vDataArray The array with the data in it.
+     * @param vDataArrayIndex The index in the array to print up to.
+     */
     public static void printArray(String[] vDataArray, int vDataArrayIndex){
-        String currentLine = "";
-        String[] currentLineData;
+      System.out.println("                         Outputting the final array.");
+      System.out.println("----------------------------------------------------------------------------");
       for (int i = 0; i < vDataArrayIndex; i++){
-        currentLineData = vDataArray[i].split(",");
-        currentLine = String.format("%-10s %-10s %-7s %-4s %-16s %s",
-                              currentLineData[0].trim(),
-                              currentLineData[1].trim(),
-                              currentLineData[2].trim(),
-                              currentLineData[3].trim(),
-                              currentLineData[4].trim(),
-                              currentLineData[5].trim());
-          System.out.println(currentLine);
+        System.out.println(vDataArray[i]);
       }
+      System.out.println("----------------------------------------------------------------------------");
+      System.out.println("                     Finished Outputting the final array.");
+      System.out.println("----------------------------------------------------------------------------");
     }
     
+    /**
+     * Outputs whether an error was found in a piece of data.
+     * 
+     * @param vValue The current value being checked.
+     * @param vType  The type of value being checked (for example age, first name, etc...).
+     * @param vLine  The current line in the file.
+     * @param vError Was an error found with the data. Value is true if so.
+     * @return Returns 1 if there is an error and 0 if there is not.
+     */
     public static int outputError(String vValue, String vType, int vLine, boolean vError){
         if (!vError){
             System.out.print("Line " +  (vLine) +  " is incorrect.");
             System.out.println(" Invalid " + vType + " value " + "\"" + vValue + "\"" + " found.");
-            System.out.println("-------------------------------------------------");     
+            System.out.println("----------------------------------------------------------------------------");     
             return 1;
         }
         return 0;
     }
     
+    /**
+     * Checks whether the current name value is correctly formatted.
+     * 
+     * @param vName The current name value being checked.
+     * @return Returns true if the name value is correct and false if not.
+     */
     public static boolean validateName(String vName){
         boolean correct = false;
         for (int i = 0; i < vName.length(); i++){
@@ -107,6 +131,12 @@ public class FileParser {
         return correct;
     }
     
+    /**
+     * Checks if the current sex value is correctly formatted.
+     * 
+     * @param vSex The current sex value being checked.
+     * @return Returns true if the sex value is correct.
+     */
     public static boolean validateSex(String vSex){
         boolean correct = false;
         vSex = vSex.toUpperCase();
@@ -116,6 +146,12 @@ public class FileParser {
         return correct;
     }
     
+    /**
+     * Checks if the current age value is correctly formatted.
+     * 
+     * @param vAge The current age value being checked.
+     * @return Returns true if the age value is correct.
+     */
     public static boolean validateAge(String vAge){
         boolean correct = true;
         char currChar = 0;
@@ -138,6 +174,12 @@ public class FileParser {
         return correct;
     }
     
+    /**
+     * Checks if the current phone number is correctly formatted.
+     * 
+     * @param vNumber The current phone number being validated.
+     * @return Returns true if the number is valid and false if not.
+     */
     public static boolean validateNumber(String vNumber){
         vNumber = vNumber.replace("(", "");
         vNumber = vNumber.replace(")", "");
@@ -157,6 +199,12 @@ public class FileParser {
         }
     }
     
+    /**
+     * Checks if the current email address is correctly formatted.
+     * 
+     * @param vEmail The current email address being validated.
+     * @return Returns true if the email address is valid and false if not.
+     */
     public static boolean validateEmail(String vEmail){
         char currChar;
         
@@ -178,13 +226,13 @@ public class FileParser {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
         String fileName = args[0];
         String[] dataArray = new String[100];
         int dataArrayIndex = 0;
-       
-        dataArrayIndex = readFile(fileName, dataArray, dataArrayIndex);
+        
+        dataArrayIndex = readFile(fileName, dataArray, dataArrayIndex); 
         printArray(dataArray, dataArrayIndex);
+        
     }
     
 }
