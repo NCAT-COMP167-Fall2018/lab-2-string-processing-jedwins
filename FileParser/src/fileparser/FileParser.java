@@ -26,15 +26,14 @@ public class FileParser {
         String[] currentLine;
         String line = "";
         
+        int errorCount = 0;
         int lineCount = 1;
-        boolean correct = true;
         String firstName, lastName, age, number, email, sex;
-        boolean incorrectFound = false;
         try{
             File file = new File(vFileName);
             Scanner fileReader = new Scanner(file);
             while (fileReader.hasNext()){
-                incorrectFound = false;
+                errorCount = 0;
                 line = fileReader.nextLine();
                 currentLine = line.split(",");
                 
@@ -45,64 +44,15 @@ public class FileParser {
                 number = currentLine[4].trim();
                 email = currentLine[5].trim();      
 
-                correct = validateName(firstName);
-                if (!correct){
-                    System.out.print("Entry " + (lineCount) + " is incorrect.");
-                    System.out.println(" sIncorrect value " + firstName + " found.");
-                    correct = true;
-
-                    System.out.println("--------------------------------------------------");
-                    incorrectFound = true;
-                }
-
-                correct = validateName(lastName);
-                if (!correct){
-                    System.out.print("Entry " + (lineCount) + " is incorrect.");
-                    System.out.println(" Incorrect value " + lastName + " found.");
-                    correct = true;
-                    System.out.println("-------------------------------------------------");
-                    incorrectFound = true;
-                }
-
-                correct = validateSex(sex);
-                if (!correct){
-                    System.out.print("Entry " + (lineCount) + " is incorrect.");
-                    System.out.println(" Incorrect value " + sex + " found.");
-                    correct = true;
-                    System.out.println("-------------------------------------------------");
-                    incorrectFound = true;
-                }
+                errorCount += outputError(firstName, "first name", lineCount, validateName(firstName));
+                errorCount += outputError(lastName, "last name", lineCount, validateName(lastName));
+                errorCount += outputError(sex, "sex", lineCount, validateSex(sex));
+                errorCount += outputError(age, "age", lineCount, validateAge(age));
+                errorCount += outputError(number, "phone number", lineCount, validateNumber(number));
+                errorCount += outputError(email, "email address", lineCount, validateEmail(email));
                 
-                correct = validateAge(age);
-                if (!correct){
-                    System.out.print("Entry " + (lineCount) + " is incorrect.");
-                    System.out.println(" Incorrect value " + age + " found.");
-                    correct = true;
-                    System.out.println("-------------------------------------------------");
-                    incorrectFound = true;
-                }
-                
-                
-                correct = validateNumber(number);
-                 if (!correct){
-                    System.out.print("Entry " + (lineCount) + " is incorrect.");
-                    System.out.println(" Incorrect value " + number + " found.");
-                    correct = true;
-                    System.out.println("-------------------------------------------------");
-                    incorrectFound = true;
-                }
-                
-                 correct = validateEmail(email);
-                 if (!correct){
-                    System.out.print("Entry " + (lineCount) + " is incorrect.");
-                    System.out.println(" Incorrect value " + email + " found.");
-                    correct = true;
-                    System.out.println("-------------------------------------------------");
-                    incorrectFound = true;
-                }
-                 
                 lineCount++;
-                if (!incorrectFound){
+                if (errorCount == 0){
                     vDataArray[vDataArrayIndex] = line;
                     vDataArrayIndex++;
                 }
@@ -129,6 +79,16 @@ public class FileParser {
                               currentLineData[5].trim());
           System.out.println(currentLine);
       }
+    }
+    
+    public static int outputError(String vValue, String vType, int vLine, boolean vError){
+        if (!vError){
+            System.out.print("Line " +  (vLine) +  " is incorrect.");
+            System.out.println(" Invalid " + vType + " value " + "\"" + vValue + "\"" + " found.");
+            System.out.println("-------------------------------------------------");     
+            return 1;
+        }
+        return 0;
     }
     
     public static boolean validateName(String vName){
