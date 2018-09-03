@@ -25,8 +25,8 @@ public class FileParser {
      * @return Returns the new empty index in the array.
      */
     public static int readFile(String vFileName,  String[] vDataArray, int vDataArrayIndex){     
-        String[] currentLine;
-        String line = "";
+        String[] splitLine;
+        String currentLine = "";
         
         int errorCount = 0;
         int lineCount = 1;
@@ -39,15 +39,15 @@ public class FileParser {
             System.out.println("----------------------------------------------------------------------------");
             while (fileReader.hasNext()){
                 errorCount = 0;
-                line = fileReader.nextLine();
-                currentLine = line.split(",");
+                currentLine = fileReader.nextLine();
+                splitLine = currentLine.split(",");
                 
-                firstName = currentLine[0].trim();
-                lastName = currentLine[1].trim();
-                sex = currentLine[2].trim();
-                age = currentLine[3].trim();
-                number = currentLine[4].trim();
-                email = currentLine[5].trim();      
+                firstName = splitLine[0].trim();
+                lastName = splitLine[1].trim();
+                sex = splitLine[2].trim();
+                age = splitLine[3].trim();
+                number = splitLine[4].trim();
+                email = splitLine[5].trim();      
 
                 errorCount += outputError(firstName, "first name", lineCount, validateName(firstName));
                 errorCount += outputError(lastName, "last name", lineCount, validateName(lastName));
@@ -58,6 +58,7 @@ public class FileParser {
                 
                 lineCount++;
                 if (errorCount == 0){
+                    sex = sex.substring(0, 1).toUpperCase() + sex.substring(1);
                     vDataArray[vDataArrayIndex] = 
                         String.format("%-10s %-10s %-7s %-4s %-14s %s", firstName, lastName, sex, age, number, email);
                     vDataArrayIndex++;
